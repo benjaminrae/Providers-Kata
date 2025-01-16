@@ -18,6 +18,7 @@ describe('EventService', () => {
    * */
   it('should schedule an event', () => {
     const startTime = new Date(2024, 9, 5, 19, 0)
+    const endTime = new Date(2024, 9, 5, 20, 0)
     dateTimeProvider.setDate(startTime)
 
     eventService.scheduleEvent('Event Name', 60)
@@ -26,7 +27,7 @@ describe('EventService', () => {
       id: expect.any(String),
       name: 'Event Name',
       startTime,
-      endTime: expect.any(Date),
+      endTime,
     })
   })
 
@@ -35,9 +36,9 @@ describe('EventService', () => {
    * and decouple the test from the implementation details
    * */
   it('should schedule an event (slow)', async () => {
-    const startTime = new Date()
+    const startTime = new Date(2025, 5, 2, 9, 0)
     dateTimeProvider.setDate(startTime)
-    const endTime = new Date(startTime.getTime() + 60 * 60000)
+    const endTime = new Date(2025, 5, 2, 10, 0)
     await new Promise(resolve => setTimeout(resolve, 1))
 
     eventService.scheduleEvent('Event Name', 60)
@@ -60,11 +61,14 @@ describe('EventService', () => {
 
     eventService.scheduleEvent('Event Name', 60, startTime)
 
+    const timeNow = new Date(2024, 0, 1, 0, 0)
+    dateTimeProvider.setDate(timeNow)
+
     expect(eventService.checkPendingEvents()).toContainEqual({
       id: expect.any(String),
       name: 'Event Name',
-      startTime: startTime,
-      endTime: endTime,
+      startTime,
+      endTime,
     })
   })
 
