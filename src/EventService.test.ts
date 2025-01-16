@@ -1,13 +1,17 @@
 import { EventService } from './EventService'
 import { InMemoryEventRepository } from './InMemoryEventRepository'
+import { SystemDateTimeProvider } from './SystemDateTimeProvider'
+import { DateTimeProvider } from './DateTimeProvider'
 
 describe('EventService', () => {
   let eventService: EventService
   let eventRepository: InMemoryEventRepository
+  let dateTimeProvider: DateTimeProvider
 
   beforeEach(() => {
     eventRepository = new InMemoryEventRepository()
-    eventService = new EventService(eventRepository)
+    dateTimeProvider = new SystemDateTimeProvider()
+    eventService = new EventService(eventRepository, dateTimeProvider)
   })
 
   /*

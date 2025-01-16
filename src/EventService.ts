@@ -1,11 +1,17 @@
 import { Event } from './Event'
 import { EventRepository } from './EventRepository'
+import { DateTimeProvider } from './DateTimeProvider'
 
 export class EventService {
   private eventRepository: EventRepository
+  private dateTimeProvider: DateTimeProvider
 
-  constructor(eventRepository: EventRepository) {
+  constructor(
+    eventRepository: EventRepository,
+    dateTimeProvider: DateTimeProvider,
+  ) {
     this.eventRepository = eventRepository
+    this.dateTimeProvider = dateTimeProvider
   }
 
   public scheduleEvent(
@@ -25,6 +31,6 @@ export class EventService {
   }
 
   private now(): Date {
-    return new Date()
+    return this.dateTimeProvider.now()
   }
 }
