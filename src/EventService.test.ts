@@ -90,7 +90,25 @@ describe('EventService', () => {
   /*
    * TASK 4: Write a test to check that past events are not listed as pending
    * */
-  it.todo('should not list past events as pending', () => {})
+  it('should not list past events as pending', () => {
+    const startTime = new Date(2024, 0, 1, 0, 0)
+    dateTimeProvider.setDate(startTime)
+    const endTime = new Date(2024, 0, 1, 1, 0)
+
+    uuidProvider.setUuid(EVENT_ID)
+
+    eventService.scheduleEvent('Event Name', 60, startTime)
+
+    const timeNow = new Date(2025, 0, 1, 1, 1)
+    dateTimeProvider.setDate(timeNow)
+
+    expect(eventService.checkPendingEvents()).not.toContainEqual({
+      id: EVENT_ID,
+      name: 'Event Name',
+      startTime,
+      endTime,
+    })
+  })
 
   it('should return an empty array if there are no pending events', () => {
     expect(eventService.checkPendingEvents().length).toBe(0)
