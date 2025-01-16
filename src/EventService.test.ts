@@ -1,16 +1,25 @@
 import { EventService } from './EventService'
 import { InMemoryEventRepository } from './InMemoryEventRepository'
 import { DateTimeProviderStub } from './DateTimeProviderStub'
+import { UuidProviderStub } from './UuidProviderStub'
 
 describe('EventService', () => {
   let eventService: EventService
   let eventRepository: InMemoryEventRepository
   let dateTimeProvider: DateTimeProviderStub
+  let uuidProvider: UuidProviderStub
+
+  const EVENT_ID = '36c17cd6-40ea-491f-a2f9-62b4749c7620'
 
   beforeEach(() => {
     eventRepository = new InMemoryEventRepository()
     dateTimeProvider = new DateTimeProviderStub()
-    eventService = new EventService(eventRepository, dateTimeProvider)
+    uuidProvider = new UuidProviderStub()
+    eventService = new EventService(
+      eventRepository,
+      dateTimeProvider,
+      uuidProvider,
+    )
   })
 
   /*
@@ -21,10 +30,12 @@ describe('EventService', () => {
     const endTime = new Date(2024, 9, 5, 20, 0)
     dateTimeProvider.setDate(startTime)
 
+    uuidProvider.setUuid(EVENT_ID)
+
     eventService.scheduleEvent('Event Name', 60)
 
     expect(eventService.checkPendingEvents()).toContainEqual({
-      id: expect.any(String),
+      id: EVENT_ID,
       name: 'Event Name',
       startTime,
       endTime,
@@ -41,10 +52,12 @@ describe('EventService', () => {
     const endTime = new Date(2025, 5, 2, 10, 0)
     await new Promise(resolve => setTimeout(resolve, 1))
 
+    uuidProvider.setUuid(EVENT_ID)
+
     eventService.scheduleEvent('Event Name', 60)
 
     expect(eventService.checkPendingEvents()).toContainEqual({
-      id: expect.any(String),
+      id: EVENT_ID,
       name: 'Event Name',
       startTime,
       endTime,
@@ -59,13 +72,15 @@ describe('EventService', () => {
     const startTime = new Date(2025, 0, 16, 20, 0)
     const endTime = new Date(2025, 0, 16, 21, 0)
 
+    uuidProvider.setUuid(EVENT_ID)
+
     eventService.scheduleEvent('Event Name', 60, startTime)
 
     const timeNow = new Date(2024, 0, 1, 0, 0)
     dateTimeProvider.setDate(timeNow)
 
     expect(eventService.checkPendingEvents()).toContainEqual({
-      id: expect.any(String),
+      id: EVENT_ID,
       name: 'Event Name',
       startTime,
       endTime,
