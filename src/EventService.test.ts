@@ -61,6 +61,11 @@ describe('EventService', () => {
     })
   })
 
+  /*
+   * TASK 4: Write a test to check that past events are not listed as pending
+   * */
+  it.todo('should not list past events as pending', () => {})
+
   it('should return an empty array if there are no pending events', () => {
     expect(eventService.checkPendingEvents().length).toBe(0)
   })
