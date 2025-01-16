@@ -1,7 +1,7 @@
-import { Event } from "./Event";
+import { Event } from './Event'
 
 export interface EventRepository {
-  save(event: Event): void;
+  save(event: Event): void
 
-  findEventsFinishingAfter(time: Date): Event[];
+  findEventsFinishingAfter(time: Date): Event[]
 }
