@@ -1,16 +1,15 @@
 import { EventService } from './EventService'
 import { InMemoryEventRepository } from './InMemoryEventRepository'
-import { SystemDateTimeProvider } from './SystemDateTimeProvider'
-import { DateTimeProvider } from './DateTimeProvider'
+import { DateTimeProviderStub } from './DateTimeProviderStub'
 
 describe('EventService', () => {
   let eventService: EventService
   let eventRepository: InMemoryEventRepository
-  let dateTimeProvider: DateTimeProvider
+  let dateTimeProvider: DateTimeProviderStub
 
   beforeEach(() => {
     eventRepository = new InMemoryEventRepository()
-    dateTimeProvider = new SystemDateTimeProvider()
+    dateTimeProvider = new DateTimeProviderStub()
     eventService = new EventService(eventRepository, dateTimeProvider)
   })
 
@@ -18,12 +17,15 @@ describe('EventService', () => {
    * TASK 1: Refactor the event service so that we can remove the use of expect.any(...)
    * */
   it('should schedule an event', () => {
+    const startTime = new Date(2024, 9, 5, 19, 0)
+    dateTimeProvider.setDate(startTime)
+
     eventService.scheduleEvent('Event Name', 60)
 
     expect(eventService.checkPendingEvents()).toContainEqual({
       id: expect.any(String),
       name: 'Event Name',
-      startTime: expect.any(Date),
+      startTime,
       endTime: expect.any(Date),
     })
   })
@@ -34,6 +36,7 @@ describe('EventService', () => {
    * */
   it('should schedule an event (slow)', async () => {
     const startTime = new Date()
+    dateTimeProvider.setDate(startTime)
     const endTime = new Date(startTime.getTime() + 60 * 60000)
     await new Promise(resolve => setTimeout(resolve, 1))
 
