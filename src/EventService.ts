@@ -24,7 +24,7 @@ export class EventService {
     return this.eventRepository.findEventsFinishingAfter(this.now())
   }
 
-  private now() {
+  private now(): Date {
     return new Date()
   }
 }
