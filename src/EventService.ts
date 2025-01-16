@@ -23,7 +23,7 @@ export class EventService {
     durationInMinutes: number,
     startDate?: Date,
   ): void {
-    const startTime = startDate ?? this.now()
+    const startTime = startDate ?? this.dateTimeProvider.now()
     const endTime = new Date(startTime.getTime() + durationInMinutes * 60000)
     const id = this.uuidProvider.randomUuid()
 
@@ -31,10 +31,8 @@ export class EventService {
   }
 
   public checkPendingEvents(): Event[] {
-    return this.eventRepository.findEventsFinishingAfter(this.now())
-  }
-
-  private now(): Date {
-    return this.dateTimeProvider.now()
+    return this.eventRepository.findEventsFinishingAfter(
+      this.dateTimeProvider.now(),
+    )
   }
 }
